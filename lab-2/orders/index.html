@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bookshop | Order API</title>
+<style>
+  body { font: 17px/1.5 system-ui, sans-serif; max-width: 36rem; margin: 12vh auto; padding: 1rem; color: #192c37; }
+  button { font: inherit; cursor: pointer; border: 1px solid #9baeb2; background: #edf4f2; padding: .55rem .9rem; margin: .25rem; border-radius: .3rem; }
+  output { display: block; margin-top: 1.25rem; }
+</style>
+<h1>Order API</h1>
+<p>Choose a request, then check the monitoring dashboard.</p>
+<button data-action="error">Create error</button>
+<button data-action="slow">Create delay</button>
+<button data-action="load">Generate load</button>
+<output aria-live="polite"></output>
+<script>
+  const output = document.querySelector("output");
+  for (const button of document.querySelectorAll("button")) {
+    button.onclick = async () => {
+      try {
+        const response = await fetch("/api/orders/" + button.dataset.action, {method: "POST"});
+        const result = await response.json();
+        output.textContent = response.status + " · " + result.message;
+      } catch {
+        output.textContent = "Could not reach the order API.";
+      }
+    };
+  }
+</script>
+</html>
