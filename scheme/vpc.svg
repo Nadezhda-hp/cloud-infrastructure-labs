@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="406" viewBox="0 0 960 406" role="img" aria-labelledby="title desc">
+  <title id="title">Сеть книжного магазина</title>
+  <desc id="desc">Запрос идет через IGW к одному ALB в трех зонах. ALB передает запрос витрине или API. API обращается к узлу записи PostgreSQL. У каждой зоны свой NAT-шлюз, а база размещена в подсетях данных.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 7 7" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <path d="M0 0 7 3.5 0 7Z" fill="#292929"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 16px; fill: #202020; }
+    .name { font-weight: bold; }
+    .small { font-size: 14px; }
+    .node { fill: #fff; stroke: #474747; stroke-width: 1.2; }
+    .wire { fill: none; stroke: #292929; stroke-width: 1.4; }
+    .arrow { marker-end: url(#arrow); }
+    .rule { stroke: #c5c5c5; }
+  </style>
+  <rect width="960" height="406" fill="#fff"/>
+  <rect x="207" y="22" width="726" height="365" fill="none" stroke="#727272"/>
+  <text x="242" y="52" class="name">VPC 10.42.0.0/16</text>
+
+  <path class="wire arrow" d="M149 143H184"/>
+  <path class="wire arrow" d="M234 143H281"/>
+  <path class="wire" d="M415 143H466M466 97V181"/>
+  <path class="wire arrow" d="M466 97H582"/>
+  <path class="wire arrow" d="M466 181H582"/>
+  <path class="wire arrow" d="M709 181H797"/>
+
+  <g text-anchor="middle">
+    <rect class="node" x="24" y="122" width="125" height="42"/>
+    <text x="86.5" y="149">Покупатель</text>
+
+    <rect class="node" x="186" y="124" width="48" height="38"/>
+    <text x="210" y="149">IGW</text>
+
+    <rect class="node" x="283" y="118" width="132" height="50"/>
+    <text x="349" y="139" class="name">ALB (L7)</text>
+    <text x="349" y="158" class="small">HTTPS 443</text>
+    <text x="349" y="187" class="small">Запросы по очереди</text>
+
+    <rect class="node" x="584" y="76" width="125" height="42"/>
+    <text x="646.5" y="103">Витрина</text>
+    <text x="523" y="88" class="small">остальные пути</text>
+    <text x="523" y="116" class="small">HTTP 80</text>
+
+    <rect class="node" x="584" y="160" width="125" height="42"/>
+    <text x="646.5" y="187">API заказов</text>
+    <text x="523" y="172" class="small">/api/*</text>
+    <text x="523" y="201" class="small">HTTP 8080</text>
+
+    <rect class="node" x="799" y="160" width="114" height="42"/>
+    <text x="856" y="178">PostgreSQL</text>
+    <text x="856" y="195" class="small">узел записи</text>
+    <text x="754" y="172" class="small">TCP 5432</text>
+  </g>
+
+  <path class="rule" d="M242 220H909M242 253H909M242 281H909M242 309H909M242 338H909"/>
+  <g class="name">
+    <text x="248" y="244">Зона</text>
+    <text x="320" y="244">Публичная подсеть</text>
+    <text x="520" y="244">Приватная подсеть</text>
+    <text x="727" y="244">Подсеть данных</text>
+  </g>
+  <g>
+    <text x="248" y="273">A</text>
+    <text x="320" y="273">Узел ALB, NAT-A</text>
+    <text x="520" y="273">Витрина и API</text>
+    <text x="727" y="273">Основной узел БД</text>
+    <text x="248" y="301">B</text>
+    <text x="320" y="301">Узел ALB, NAT-B</text>
+    <text x="520" y="301">Витрина и API</text>
+    <text x="727" y="301">Реплика БД</text>
+    <text x="248" y="329">C</text>
+    <text x="320" y="329">Узел ALB, NAT-C</text>
+    <text x="520" y="329">Витрина и API</text>
+    <text x="727" y="329">Реплика БД</text>
+  </g>
+  <text x="248" y="366">Приложения и БД выходят в интернет через NAT своей зоны, затем через IGW</text>
+</svg>
