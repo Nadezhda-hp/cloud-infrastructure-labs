@@ -1,0 +1,14 @@
+local.file_match "orders" {
+  path_targets = [{"__path__" = "/logs/orders.jsonl", "service" = "orders-api"}]
+}
+
+loki.source.file "orders" {
+  targets    = local.file_match.orders.targets
+  forward_to = [loki.write.local.receiver]
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
