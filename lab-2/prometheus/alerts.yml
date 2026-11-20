@@ -1,0 +1,15 @@
+groups:
+  - name: orders
+    rules:
+      - alert: OrderTrafficSpike
+        expr: sum(rate(orders_requests_total[1m])) > 0.5
+        annotations:
+          summary: Order traffic exceeds 0.5 requests per second
+      - alert: OrderErrors
+        expr: sum(rate(orders_errors_total[1m])) / clamp_min(sum(rate(orders_requests_total[1m])), 0.000001) > 0.05
+        annotations:
+          summary: More than 5% of order requests failed
+      - alert: SlowOrders
+        expr: histogram_quantile(0.95, sum by (le) (rate(orders_duration_seconds_bucket[1m]))) > 1
+        annotations:
+          summary: The 95th percentile exceeds one second
